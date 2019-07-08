@@ -1,0 +1,55 @@
+version: '3.5'
+services:
+    logstash:
+        image: docker.elastic.co/logstash/logstash:6.6.0
+        ports:
+            - "12201:12201/udp"
+            - "5044:5044"
+        environment:
+            - "xpack.monitoring.elasticsearch.url=http://elasticsearch:9200"
+        volumes:
+            - ./config/logstash:/usr/share/logstash/pipeline
+        depends_on:
+            - elasticsearch
+        command: logstash -f /usr/share/logstash/pipeline/ --config.reload.automatic
+        networks:
+            - default
+    kibana:
+        image: docker.elastic.co/kibana/kibana:6.6.0
+        ports:
+        - "5601:5601"
+        depends_on:
+        - elasticsearch
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
+        ports:
+        - "9200:9200"
+        environment:
+        - "ES_JAVA_OPTS=-Xmx2g -Xms2g"
+    graphql:
+        image: node:8.10.0-alpine
+        working_dir: /graphql
+        volumes:
+          - ./:/graphql
+        ports:
+          - 8080:8080
+          - 4000:4000
+        command: >
+          sh -c "yarn && yarn start"
+        depends_on:
+            - logstash
+    db:
+        image: postgres:11-alpine
+        environment:
+            POSTGRES_DB: elevenlabs
+            POSTGRES_USER: elevenlabs
+            POSTGRES_PASSWORD: elevenlabs
+        ports:
+            - 5432:5432
+    adminer:
+        image: adminer
+        depends_on:
+            - db
+        ports:
+            - 2000:8080
+

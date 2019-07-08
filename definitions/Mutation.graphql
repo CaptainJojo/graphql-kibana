@@ -1,0 +1,8 @@
+type Mutation {
+  _empty: String
+}
+
+
+extend type Mutation {
+  addFather(key: ID!, fatherKey: ID!): [Character]
+}

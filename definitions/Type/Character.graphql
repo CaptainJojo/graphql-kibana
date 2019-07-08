@@ -1,0 +1,22 @@
+type Character {
+    id: ID!
+    # The name of this character
+    name: String!
+    # The titles that this character holds.
+    titles: [String]
+    # The gender of this character.
+    gender: Gender!
+    # The culture that this character belongs to.
+    culture: String
+
+
+    # Textual representation of when and where this character was born.
+    # born: String
+    # # Textual representation of when and where this character died.
+    # died: String
+
+    # This character's mother.
+    mother: Character
+    # This character's father.
+    father: Character
+}

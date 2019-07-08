@@ -1,0 +1,8 @@
+type House {
+  key: ID!
+  name: String!
+  imageUrl: String
+  lord: Character
+  heirs: [Character]
+  characters: [Character]
+}
